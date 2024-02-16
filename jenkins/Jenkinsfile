@@ -9,7 +9,7 @@ pipeline {
         SCANNER_HOME= tool 'sonar-scanner'
         IMAGE_NAME = "idrisniyi94/reddit-project" 
         IMAGE_TAG = "fwf-${env.BUILD_NUMBER}"
-        BRANCH_NAME = '${GIT_BRANCH.split("/")[1]}'
+        BRANCH_NAME = "${GIT_BRANCH.split("/")[1]}"
     }
 
     stages {
