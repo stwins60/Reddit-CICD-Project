@@ -114,9 +114,10 @@ pipeline {
                                 sh "kubectl apply -f ${deploymentFile}"
                                 sh "kubectl apply -f ${serviceFile}"
                             }
-                            def deploymentURL = sh(script: "kubectl get service ${targetEnvironment}-reddit-project-service -o=jsonpath='{.status.loadBalancer.ingress[0].ip}' -n ${targetEnvironment}-namespace", returnStdout: true).trim()
-                            env.DEPLOYMENT_URL = deploymentURL
-                        }
+                            def deploymentPort = sh(script: "kubectl get service ${targetEnvironment}-reddit-project-service -o=jsonpath='{.spec.ports[0].nodePort}' -n ${targetEnvironment}-namespace", returnStdout: true).trim()
+                            env.DEPLOYMENT_PORT = deploymentPort
+                            def deploymentIP = sh(script: "kubectl get pods -l app=${targetEnvironment}-reddit-project-deployment -o=jsonpath='{.items[0].status.podIP}' -n ${targetEnvironment}-namespace", returnStdout: true).trim()
+                            env.DEPLOYMENT_IP = deploymentIP
                     }
                 }
             }
@@ -125,7 +126,7 @@ pipeline {
     post {
        success {
            
-            slackSend channel: '#alerts', color: 'good', message: "${currentBuild.currentResult}: \nJOB_NAME: ${env.JOB_NAME} \nBUILD_NUMBER: ${env.BUILD_NUMBER} \nBRANCH_NAME: ${env.BRANCH_NAME} \nDeployment URL: ${DEPLOYMENT_URL}. \n More Info ${env.BUILD_URL}."
+            slackSend channel: '#alerts', color: 'good', message: "${currentBuild.currentResult}: \nJOB_NAME: ${env.JOB_NAME} \nBUILD_NUMBER: ${env.BUILD_NUMBER} \nBRANCH_NAME: ${env.BRANCH_NAME} \nDeployment URL: http://${env.DEPLOYMENT_IP}:${env.DEPLOYMENT_PORT}. \n More Info ${env.BUILD_URL}"
         }
         failure {
 
