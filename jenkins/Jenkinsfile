@@ -79,7 +79,7 @@ pipeline {
             steps {
                 script {
                     def branchTag = determineTargetEnvironment()
-                    sh "trivy image $IMAGE_NAME:$branchTag-$IMAGE_TAG > trivy-${env.BRANCH_NAME}-reddit-project-image-result.txt"
+                    sh "trivy image $IMAGE_NAME:$branchTag-$IMAGE_TAG"
                 }
             }
         }
