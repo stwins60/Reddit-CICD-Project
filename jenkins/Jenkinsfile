@@ -66,11 +66,11 @@ pipeline {
                    if (branchTag == 'prod') {
                         sh "npm run build"
                         sh "sed -i 's/CMD \\[\"npm\", \"run\", \"dev\"\\]/CMD \\[\"npm\", \"start\"\\]/' Dockerfile"
-                        sh "docker build -t $IMAGE_NAME:$branchTag-$IMAGE_TAG"
+                        sh "docker build -t $IMAGE_NAME:$branchTag-$IMAGE_TAG ."
                    }
                    else {
                     
-                        sh "docker build -t $IMAGE_NAME:$branchTag-$IMAGE_TAG"
+                        sh "docker build -t $IMAGE_NAME:$branchTag-$IMAGE_TAG ."
                    }
                 }
             }
