@@ -108,8 +108,13 @@ pipeline {
                                 sh "kubectl apply -f ${deploymentFile}"
                                 sh "kubectl apply -f ${serviceFile}"
                             } else {
-                                echo "Deployment does not exist. Skipping deletion and re-apply."
+                                echo "Deployment does not exist. Creating new ${targetEnvironment} deployment"
+                                sh "sed -i 's|image: .*|image: $IMAGE_NAME:$branchTag-$IMAGE_TAG|' $deploymentFile"
+                                sh "kubectl apply -f ${deploymentFile}"
+                                sh "kubectl apply -f ${serviceFile}"
                             }
+                            def deploymentURL = sh(script: "kubectl get service ${targetEnvironment}-reddit-project-service -o=jsonpath='{.status.loadBalancer.ingress[0].ip}'", returnStdout: true).trim()
+                            env.DEPLOYMENT_URL = deploymentURL
                         }
                     }
                 }
@@ -119,7 +124,7 @@ pipeline {
     post {
        success {
            
-            slackSend channel: '#alerts', color: 'good', message: "${currentBuild.currentResult}: \nJOB_NAME: ${env.JOB_NAME} \nBUILD_NUMBER: ${env.BUILD_NUMBER} \nBRANCH_NAME: ${env.BRANCH_NAME}. \n More Info ${env.BUILD_URL}"
+            slackSend channel: '#alerts', color: 'good', message: "${currentBuild.currentResult}: \nJOB_NAME: ${env.JOB_NAME} \nBUILD_NUMBER: ${env.BUILD_NUMBER} \nBRANCH_NAME: ${env.BRANCH_NAME} \nDeployment URL: ${DEPLOYMENT_URL}. \n More Info ${env.BUILD_URL}."
         }
         failure {
 
