@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dev-reddit-project-deployment
+  namespace: dev-namespace
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dev-reddit-project-deployment
+  template:
+    metadata:
+      labels:
+        app: dev-reddit-project-deployment
+    spec:
+      containers:
+      - name: dev-reddit-project-deployment
+        image: idrisniyi94/reddit-project:dev-fwf-1
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3000
