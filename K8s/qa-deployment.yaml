@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qa-reddit-project-deployment
+  namespace: qa-namespace
+spec:
+  selector:
+    matchLabels:
+      app: qa-reddit-project-deployment
+  template:
+    metadata:
+      labels:
+        app: qa-reddit-project-deployment
+        
+    spec:
+      containers:
+      - name: qa-reddit-project-deployment
+        image: idrisniyi94/reddit-project:qa-fwf-1
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3000
