@@ -64,7 +64,7 @@ pipeline {
                 script {
                    def branchTag = determineTargetEnvironment()
                    if (branchTag == 'prod') {
-                        sh "npm build"
+                        sh "npm run build"
                         sh "sed -i 's/CMD \\[\"npm\", \"run\", \"dev\"\\]/CMD \\[\"npm\", \"start\"\\]/' Dockerfile"
                         sh "docker build -t $IMAGE_NAME:$branchTag-$IMAGE_TAG"
                    }
