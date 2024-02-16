@@ -114,7 +114,7 @@ pipeline {
                                 sh "kubectl apply -f ${deploymentFile}"
                                 sh "kubectl apply -f ${serviceFile}"
                             }
-                            def deploymentURL = sh(script: "kubectl get service ${targetEnvironment}-reddit-project-service -o=jsonpath='{.status.loadBalancer.ingress[0].ip}'", returnStdout: true).trim()
+                            def deploymentURL = sh(script: "kubectl get service ${targetEnvironment}-reddit-project-service -o=jsonpath='{.status.loadBalancer.ingress[0].ip}' -n ${targetEnvironment}-namespace", returnStdout: true).trim()
                             env.DEPLOYMENT_URL = deploymentURL
                         }
                     }
