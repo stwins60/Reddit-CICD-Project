@@ -23,9 +23,9 @@ pipeline {
                 checkout scmGit(branches: [[name: '*/dev'], [name: '*/qa'], [name: '*/prod']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/stwins60/Reddit-CICD-Project.git']])
             }
         }
-        stage('NPM Build') {
+        stage('NPM Install') {
             steps {
-                sh 'npm build'
+                sh 'npm install'
             }
         }
         stage('SonarQube Analysis') {
