@@ -116,7 +116,7 @@ pipeline {
                             }
                             def deploymentPort = sh(script: "kubectl get service ${targetEnvironment}-reddit-project-service -o=jsonpath='{.spec.ports[0].nodePort}' -n ${targetEnvironment}-namespace", returnStdout: true).trim()
                             env.DEPLOYMENT_PORT = deploymentPort
-                            def deploymentIP = sh(script: "kubectl get pods -l app=${targetEnvironment}-reddit-project-deployment -o=jsonpath='{.items[0].status.podIP}' -n ${targetEnvironment}-namespace", returnStdout: true).trim()
+                            def deploymentIP = sh(script: "kubectl get pods -l app=${targetEnvironment}-reddit-project-deployment -o=jsonpath='{.items[0].status.hostIP}' -n ${targetEnvironment}-namespace", returnStdout: true).trim()
                             env.DEPLOYMENT_IP = deploymentIP
                         }
                     }
